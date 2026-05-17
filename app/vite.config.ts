@@ -9,14 +9,15 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon-192.png', 'icon-512.png'],
+      includeAssets: ['icon-192.png', 'icon-512.png', 'favicon.svg'],
       manifest: {
-        name: '計装士1級 模擬試験',
-        short_name: '計装士試験',
-        description: '計装士1級 試験対策アプリ',
-        theme_color: '#4F46E5',
-        background_color: '#f0f4ff',
+        name: '浮世絵アート - 写真を浮世絵に変換',
+        short_name: '浮世絵アート',
+        description: '描いた絵や写真を葛飾北斎・歌川広重スタイルの浮世絵に変換するアプリ',
+        theme_color: '#1a0a00',
+        background_color: '#1a0a00',
         display: 'standalone',
+        orientation: 'portrait',
         lang: 'ja',
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
@@ -25,6 +26,12 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,json,png,svg}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/api\.stability\.ai\/.*/i,
+            handler: 'NetworkOnly',
+          },
+        ],
       },
     }),
   ],

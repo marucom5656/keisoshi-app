@@ -1,21 +1,35 @@
-export type Subject = '計装一般' | '計測' | '制御' | '計装工事' | '法規・規格';
+export type Screen = 'home' | 'draw' | 'photo' | 'convert' | 'gallery' | 'settings';
 
-export interface Question {
-  id: string;
-  year: number;
-  subject: Subject;
-  text: string;
-  choices: [string, string, string, string];
-  answer: number; // 0-3
-  explanation?: string;
+export type UkiyoeStyle = 'hokusai' | 'hiroshige' | 'utamaro' | 'sharaku';
+
+export interface StyleConfig {
+  id: UkiyoeStyle;
+  name: string;
+  nameJa: string;
+  artist: string;
+  description: string;
+  prompt: string;
+  color: string;
+  bgColor: string;
 }
 
-export type Screen = 'start' | 'exam' | 'result';
+export interface DrawingTool {
+  type: 'pen' | 'eraser';
+  size: number;
+  color: string;
+  opacity: number;
+}
 
-export interface ExamSession {
-  questions: Question[];
-  userAnswers: (number | null)[];
-  startedAt: number;
-  finishedAt?: number;
-  timeLimitSec: number;
+export interface ConversionResult {
+  id: string;
+  originalImage: string;
+  convertedImage: string;
+  style: UkiyoeStyle;
+  createdAt: number;
+}
+
+export interface ApiSettings {
+  provider: 'stability' | 'replicate';
+  apiKey: string;
+  strength: number;
 }

@@ -1,50 +1,40 @@
 import { useState, useCallback } from 'react';
-import type { Question, ExamSession, Screen } from './types';
-import questionsData from './data/questions.json';
-import StartScreen from './components/StartScreen';
-import ExamScreen from './components/ExamScreen';
-import ResultScreen from './components/ResultScreen';
+import type { Screen } from './types';
+import HomeScreen from './screens/HomeScreen';
+import DrawingScreen from './screens/DrawingScreen';
+import PhotoScreen from './screens/PhotoScreen';
+import ConvertScreen from './screens/ConvertScreen';
+import GalleryScreen from './screens/GalleryScreen';
+import SettingsScreen from './screens/SettingsScreen';
 
-const allQuestions = questionsData as Question[];
+interface NavData {
+  image?: string;
+  source?: 'draw' | 'photo';
+}
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>('start');
-  const [session, setSession] = useState<ExamSession | null>(null);
+  const [screen, setScreen] = useState<Screen>('home');
+  const [navData, setNavData] = useState<NavData>({});
 
-  const handleStart = (questions: Question[], timeLimitSec: number) => {
-    setSession({
-      questions,
-      userAnswers: new Array(questions.length).fill(null),
-      startedAt: Date.now(),
-      timeLimitSec,
-    });
-    setScreen('exam');
-  };
-
-  const handleAnswer = useCallback((index: number, choice: number) => {
-    setSession(prev => {
-      if (!prev) return prev;
-      const userAnswers = [...prev.userAnswers];
-      userAnswers[index] = choice;
-      return { ...prev, userAnswers };
-    });
+  const navigate = useCallback((nextScreen: Screen, data?: unknown) => {
+    if (data && typeof data === 'object') {
+      setNavData(data as NavData);
+    }
+    setScreen(nextScreen);
   }, []);
 
-  const handleFinish = useCallback(() => {
-    setSession(prev => prev ? { ...prev, finishedAt: Date.now() } : prev);
-    setScreen('result');
-  }, []);
-
-  const handleRetry = () => {
-    setSession(null);
-    setScreen('start');
-  };
-
-  if (screen === 'exam' && session) {
-    return <ExamScreen session={session} onAnswer={handleAnswer} onFinish={handleFinish} />;
-  }
-  if (screen === 'result' && session) {
-    return <ResultScreen session={session} onRetry={handleRetry} />;
-  }
-  return <StartScreen allQuestions={allQuestions} onStart={handleStart} />;
+  return (
+    <div className="fixed inset-0 overflow-hidden bg-[#1a0a00]">
+      <div className="w-full h-full max-w-lg mx-auto relative">
+        {screen === 'home' && <HomeScreen onNavigate={navigate} />}
+        {screen === 'draw' && <DrawingScreen onNavigate={navigate} />}
+        {screen === 'photo' && <PhotoScreen onNavigate={navigate} />}
+        {screen === 'convert' && navData.image && (
+          <ConvertScreen image={navData.image} onNavigate={navigate} />
+        )}
+        {screen === 'gallery' && <GalleryScreen onNavigate={navigate} />}
+        {screen === 'settings' && <SettingsScreen onNavigate={navigate} />}
+      </div>
+    </div>
+  );
 }
