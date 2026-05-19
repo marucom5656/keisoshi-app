@@ -32,7 +32,7 @@ export function loadSettings(): ApiSettings {
   } catch {
     // ignore
   }
-  return { provider: 'stability', apiKey: '', strength: 0.85 };
+  return { provider: 'stability', apiKey: '', strength: 0.7 };
 }
 
 export function saveSettings(settings: ApiSettings): void {

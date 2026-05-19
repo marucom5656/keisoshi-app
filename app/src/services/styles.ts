@@ -8,7 +8,7 @@ export const UKIYOE_STYLES: StyleConfig[] = [
     artist: '葛飾北斎',
     description: '富嶽三十六景スタイル\n大胆な波と幾何学的な構図',
     prompt:
-      'ukiyo-e Japanese woodblock print style by Katsushika Hokusai, Thirty-six Views of Mount Fuji aesthetic, bold geometric waves, strong indigo blue and white contrast, dramatic composition, woodblock texture, traditional Japanese art, high detail',
+      'convert this exact scene into ukiyo-e Japanese woodblock print style by Katsushika Hokusai, keep the same subjects people and composition, apply bold indigo blue and white color palette, add woodblock print texture and hatching lines, geometric wave patterns in background, traditional Japanese art style, preserve faces and figures',
     color: '#1e3a5f',
     bgColor: '#dbeafe',
   },
@@ -19,7 +19,7 @@ export const UKIYOE_STYLES: StyleConfig[] = [
     artist: '歌川広重',
     description: '東海道五十三次スタイル\n柔らかな風景と霞がかった山',
     prompt:
-      'ukiyo-e Japanese woodblock print style by Utagawa Hiroshige, Fifty-three Stations of the Tokaido aesthetic, soft misty landscapes, delicate natural scenery, serene atmosphere, subtle color gradients, traditional Japanese nature art, woodblock texture',
+      'convert this exact scene into ukiyo-e Japanese woodblock print style by Utagawa Hiroshige, keep the same landscape composition and subjects, apply soft misty color gradients, add woodblock print texture, delicate natural scenery treatment, serene atmosphere with subtle tones, traditional Japanese landscape art, preserve all elements in the original image',
     color: '#1a3d2b',
     bgColor: '#dcfce7',
   },
@@ -30,7 +30,7 @@ export const UKIYOE_STYLES: StyleConfig[] = [
     artist: '喜多川歌麿',
     description: '美人画スタイル\n優雅な人物と繊細な模様',
     prompt:
-      'ukiyo-e Japanese woodblock print style bijinga by Kitagawa Utamaro, elegant figure portrait, detailed kimono patterns, soft pastel colors, graceful composition, close-up portrait framing, traditional Japanese beauty art, woodblock texture',
+      'convert this exact portrait into ukiyo-e bijinga style by Kitagawa Utamaro, keep the same person face and pose, apply soft pastel color palette, add detailed kimono pattern clothing, woodblock print texture, graceful elegant rendering, traditional Japanese beauty portrait art, preserve facial features and identity',
     color: '#7c1d3f',
     bgColor: '#fce7f3',
   },
@@ -41,7 +41,7 @@ export const UKIYOE_STYLES: StyleConfig[] = [
     artist: '東洲斎写楽',
     description: '役者絵スタイル\n大胆な表情と歌舞伎の迫力',
     prompt:
-      'ukiyo-e Japanese woodblock print yakusha-e style by Toshusai Sharaku, bold kabuki actor portrait, dramatic exaggerated expression, simplified geometric background, strong color contrast, powerful pose, traditional Japanese theater art, woodblock texture',
+      'convert this exact portrait into ukiyo-e yakusha-e style by Toshusai Sharaku, keep the same person face and expression, apply bold strong color contrast, add simplified geometric background pattern, woodblock print texture with strong outlines, dramatic powerful rendering, traditional Japanese kabuki art style, preserve the subject identity',
     color: '#7c1d0a',
     bgColor: '#fee2e2',
   },

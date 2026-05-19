@@ -20,6 +20,7 @@ export async function convertToUkiyoe(
   return convertWithReplicate(imageBase64, style, settings);
 }
 
+// structure control: 元画像の構図・人物・景色を保ちながら浮世絵スタイルに変換
 async function convertWithStability(
   imageBase64: string,
   style: UkiyoeStyle,
@@ -31,10 +32,49 @@ async function convertWithStability(
   const formData = new FormData();
   formData.append('image', blob, 'input.png');
   formData.append('prompt', prompt);
-  formData.append('mode', 'image-to-image');
-  formData.append('strength', String(settings.strength));
+  formData.append('control_strength', String(settings.strength));
   formData.append('output_format', 'jpeg');
-  formData.append('negative_prompt', 'photorealistic, modern, western art, photography, 3d render, blurry');
+  formData.append('negative_prompt', 'photorealistic, modern, western art, photography, 3d render, blurry, distorted faces');
+
+  const response = await fetch('https://api.stability.ai/v2beta/stable-image/control/structure', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${settings.apiKey}`,
+      Accept: 'image/*',
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    // structure control が使えない場合は img2img にフォールバック
+    if (response.status === 404 || response.status === 400) {
+      return convertWithStabilityImgToImg(imageBase64, style, settings);
+    }
+    throw new Error(`Stability AI エラー (${response.status}): ${errText}`);
+  }
+
+  const resultBlob = await response.blob();
+  return blobToBase64(resultBlob);
+}
+
+// フォールバック: img2img (強度を低めに設定して元画像を保持)
+async function convertWithStabilityImgToImg(
+  imageBase64: string,
+  style: UkiyoeStyle,
+  settings: ApiSettings
+): Promise<string> {
+  const blob = base64ToBlob(imageBase64, 'image/png');
+  const prompt = getStylePrompt(style);
+
+  const formData = new FormData();
+  formData.append('image', blob, 'input.png');
+  formData.append('prompt', prompt);
+  formData.append('mode', 'image-to-image');
+  // 強度を低くして元画像の構図・被写体を保持
+  formData.append('strength', String(Math.min(settings.strength, 0.65)));
+  formData.append('output_format', 'jpeg');
+  formData.append('negative_prompt', 'photorealistic, modern, western art, photography, 3d render, blurry, distorted faces');
 
   const response = await fetch('https://api.stability.ai/v2beta/stable-image/generate/sd3', {
     method: 'POST',
@@ -72,8 +112,8 @@ async function convertWithReplicate(
       input: {
         image: `data:image/png;base64,${imageBase64}`,
         prompt,
-        prompt_strength: settings.strength,
-        negative_prompt: 'photorealistic, modern, western art, photography, 3d render',
+        prompt_strength: Math.min(settings.strength, 0.65),
+        negative_prompt: 'photorealistic, modern, western art, photography, 3d render, distorted faces',
         num_inference_steps: 30,
       },
     }),
@@ -85,7 +125,6 @@ async function convertWithReplicate(
 
   const prediction = await startResponse.json() as { id: string; status: string; output?: string[] };
 
-  // Poll for result
   for (let i = 0; i < 60; i++) {
     await delay(2000);
     const pollResponse = await fetch(
